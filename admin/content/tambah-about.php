@@ -2,23 +2,23 @@
 $id = isset($_GET['edit']) ? $_GET['edit'] : '';
 if (isset($_GET['edit'])) {
     $id = $_GET['edit'];
-    $query = mysqli_query($koneksi, "SELECT * FROM sliders WHERE id ='$id'");
+    $query = mysqli_query($koneksi, "SELECT * FROM about WHERE id ='$id'");
     $rowEdit  = mysqli_fetch_assoc($query);
-    $title = "Edit User";
+    $title = "Edit Tentang Kami";
 } else {
-    $title = "Tambah User";
+    $title = "Tambah Tentang Kami";
 }
 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $queryGambar  = mysqli_query($koneksi, "SELECT id, image FROM sliders WHERE id='$id'");
+    $queryGambar  = mysqli_query($koneksi, "SELECT id, image FROM about WHERE id='$id'");
     $rowGambar = mysqli_fetch_assoc($queryGambar);
     $image_name = $rowGambar['image'];
     unlink("uploads/" . $image_name);
-    $delete = mysqli_query($koneksi, "DELETE FROM sliders WHERE id='$id'");
+    $delete = mysqli_query($koneksi, "DELETE FROM about WHERE id='$id'");
 
     if ($delete) {
-        header("location:?page=slider&hapus=berhasil");
+        header("location:?page=about&hapus=berhasil");
     }
 }
 
@@ -27,7 +27,8 @@ if (isset($_GET['delete'])) {
 
 if (isset($_POST['simpan'])) {
     $title = $_POST['title'];
-    $description = $_POST['description'];
+    $content = $_POST['content'];
+    $is_active = $_POST['is_active'];
 
     if (!empty($_FILES['image']['name'])) {
         $image     = $_FILES['image']['name'];
@@ -51,8 +52,6 @@ if (isset($_POST['simpan'])) {
                     unlink($path . $row['image']);
                 }
             }
-
-            
         } else {
             echo "extensi file tidak ditemukan";
             die;
@@ -63,16 +62,16 @@ if (isset($_POST['simpan'])) {
     // die;
     if ($id) {
         // ini query update
-        $update = mysqli_query($koneksi, "UPDATE sliders SET title='$title', 
-        description='$description', image_name='$image_name' WHERE id='$id'");
+        $update = mysqli_query($koneksi, "UPDATE about SET title='$title', 
+        content='$content', is_active='$is_active', image='$image_name' WHERE id='$id'");
         if ($update) {
-            header("location:?page=user&ubah=berhasil");
+            header("location:?page=about&ubah=berhasil");
         }
     } else {
-        $insert = mysqli_query($koneksi, "INSERT INTO sliders (title, description, image) 
-        VALUES('$title','$description','$image_name')");
+        $insert = mysqli_query($koneksi, "INSERT INTO about (title, content, image, is_active) 
+        VALUES('$title','$content','$image_name','$is_active')");
         if ($insert) {
-            header("location:?page=slider&tambah=berhasil");
+            header("location:?page=about&tambah=berhasil");
         }
     }
 }
@@ -107,7 +106,14 @@ if (isset($_POST['simpan'])) {
                         </div>
                         <div class="mb-3">
                             <label for="">Isi</label>
-                            <textarea name="description" id="" class="form-control"><?php echo ($id) ? $rowEdit['description'] : '' ?></textarea>
+                            <textarea name="content" id="summernote" class="form-control"><?php echo ($id) ? $rowEdit['content'] : '' ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Is Active</label>
+                            <select name="is_active" id="" class="form-control">
+                                <option <?php echo ($id) ? $rowEdit['is_active'] == 1 ? 'selected' : '' : '' ?> value="1">Publish</option>
+                                <option <?php echo ($id) ? $rowEdit['is_active'] == 0 ? 'selected' : '' : '' ?> value="0">Draft</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <button class="btn btn-primary" type="submit" name="simpan">Simpan</button>
