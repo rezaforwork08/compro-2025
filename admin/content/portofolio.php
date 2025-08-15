@@ -1,8 +1,8 @@
 <?php
 // JOIN
-$query = mysqli_query($koneksi, "SELECT categories.name, blogs.* FROM blogs
- JOIN categories ON categories.id = blogs.id_category
- ORDER BY blogs.id DESC");
+$query = mysqli_query($koneksi, "SELECT categories.name, portofolios.* FROM portofolios
+ JOIN categories ON categories.id = portofolios.id_category
+ ORDER BY portofolios.id DESC");
 $rows  = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
 function changeIsActive($isActive)
@@ -21,7 +21,7 @@ function changeIsActive($isActive)
 }
 ?>
 <div class="pagetitle">
-    <h1>Data Blog</h1>
+    <h1>Data Portofolio</h1>
 </div><!-- End Page Title -->
 
 <section class="section">
@@ -30,10 +30,10 @@ function changeIsActive($isActive)
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Data Blog </h5>
+                    <h5 class="card-title">Data Portofolio </h5>
 
                     <div class="mb-3" align="right">
-                        <a href="?page=tambah-blog" class="btn btn-primary">Tambah</a>
+                        <a href="?page=tambah-portofolio" class="btn btn-primary">Tambah</a>
                     </div>
                     <table class="table table-bordered">
                         <thead>
@@ -55,12 +55,12 @@ function changeIsActive($isActive)
                                     <td><?php echo $row['title'] ?></td>
                                     <td><?php echo changeIsActive($row['is_active']) ?></td>
                                     <td>
-                                        <a href="?page=tambah-blog&edit=<?php echo $row['id'] ?>" class="btn btn-sm btn-success">
+                                        <a href="?page=tambah-portofolio&edit=<?php echo $row['id'] ?>" class="btn btn-sm btn-success">
                                             Edit
                                         </a>
                                         <a
                                             onclick="return confirm('Apakah anda yakin akan menghapus data ini??')"
-                                            href="?page=tambah-blog&delete=<?php echo $row['id'] ?>"
+                                            href="?page=tambah-portofolio&delete=<?php echo $row['id'] ?>"
                                             class="btn btn-sm btn-danger">
                                             Delete
                                         </a>
